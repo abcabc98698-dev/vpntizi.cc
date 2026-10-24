@@ -159,10 +159,13 @@ const logoVariants = await Promise.all(
         className,
         "overflow-visible! h-18 px-4"
     ]}>
-        <div class="mx-auto h-full w-full max-w-(--page-width) grid grid-cols-[auto_minmax(0,1fr)_auto] items-center">
-            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-3 md:px-5 font-bold active:scale-95">
+        <div class:list={[
+            "mx-auto h-full w-full flex items-center justify-between",
+            navbarWidthFull ? "max-w-full px-2 lg:px-4" : "max-w-(--page-width)"
+        ]}>
+            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-12 px-2 md:px-3 font-bold active:scale-95 shrink-0 whitespace-nowrap">
                 <div class:list={[
-                    "flex flex-row items-center text-md",
+                    "flex flex-row items-center text-md whitespace-nowrap",
                     siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
                 ]} style="font-family: var(--font-navbar-title, inherit)">
                                     {logoConfig?.type === "icon" ? (
@@ -189,20 +192,22 @@ const logoVariants = await Promise.all(
                     {navbarTitle}
                 </div>
             </a>
-            <div class:list={[
-                "hidden lg:flex items-center space-x-1 col-start-2",
+            <nav class:list={[
+                "hidden lg:flex items-center min-w-0 flex-1 mx-1.5",
                 isNavbarMenuCentered
                     ? "justify-center"
                     : "justify-start pl-2"
             ]}>
-                {links.map((l) => {
-                    return <DropdownMenu link={l} />;
-                })}
-            </div>
-            <div class="flex col-start-3 justify-self-end">
+                <div class="flex items-center gap-0.5 xl:gap-1 shrink-0">
+                    {links.map((l) => {
+                        return <DropdownMenu link={l} />;
+                    })}
+                </div>
+            </nav>
+            <div class="flex items-center justify-end shrink-0 whitespace-nowrap">
                 <!--<SearchPanel client:load>-->
                 <Search
-                    client:load
+                    client:only="svelte"
                 />
                 {musicPlayerConfig.showInNavbar && (
                     <button aria-label={i18n(I18nKey.music)} aria-controls="music-nav-panel" aria-expanded="false" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="music-player-switch">
@@ -227,7 +232,7 @@ const logoVariants = await Promise.all(
                         </button>
                 )}
                 {/* @ts-ignore */}
-                <LightDarkSwitch client:load></LightDarkSwitch>
+                <LightDarkSwitch client:only="svelte"></LightDarkSwitch>
                 <button aria-label="Menu" aria-controls="nav-menu-panel" aria-expanded="false" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:hidden!" id="nav-menu-switch">
                     <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
                 </button>
@@ -238,7 +243,7 @@ const logoVariants = await Promise.all(
                 <MusicPlayer />
             </div>
         )}
-        {isDisplaySettingsEnabled && <DisplaySettings client:load></DisplaySettings>}
+        {isDisplaySettingsEnabled && <DisplaySettings client:only="svelte"></DisplaySettings>}
     </div>
 </div>
 

@@ -25,9 +25,50 @@ const heading =
 	page.currentPage === 1
 		? siteConfig.title
 		: `${i18n(I18nKey.home)} · ${page.currentPage}`;
+
+const pageTitle =
+	page.currentPage === 1
+		? `${siteConfig.title} - ${siteConfig.subtitle}`
+		: `第 ${page.currentPage} 页 - ${siteConfig.title} | ${siteConfig.subtitle}`;
 ---
 
-<MainGridLayout heading={heading}>
+<MainGridLayout title={pageTitle} heading={heading}>
+  {
+    page.currentPage === 1 && (
+      <div class="card-base p-6 rounded-2xl border border-black/5 dark:border-white/5 mb-5 space-y-3 bg-gradient-to-r from-(--primary)/8 via-transparent to-amber-500/8 hover:shadow-md transition-all">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <span class="text-2xl">⚡</span>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="text-lg font-extrabold text-black/90 dark:text-white/90">
+                  2026 机场品牌库大全与多维选购大厅
+                </h2>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-500 text-white shadow-xs">
+                  42+ 家品牌入库
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                  🔥 17 家附真实晚高峰跑分图
+                </span>
+              </div>
+            </div>
+          </div>
+          <a
+            href="/brands/"
+            class="px-4 py-2 rounded-xl text-xs font-bold bg-(--primary) text-white shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5 shrink-0"
+          >
+            <span>进入 42 家品牌对比大厅</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+        <p class="text-xs text-black/65 dark:text-white/65 leading-relaxed">
+          全面覆盖光速云、飞猫云、微风网络、WgetCloud、星岛梦、大佬云等 42 家主流机场服务商。包含 IEPL / IPLC 内网专线、专属客户端、ChatGPT / Netflix 解锁能力与月付起步价格实测对比，帮您避开虚假宣传与跑路风险。
+        </p>
+      </div>
+    )
+  }
   <PostPage page={page} />
   {
     page.total > page.size && (

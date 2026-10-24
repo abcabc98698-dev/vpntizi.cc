@@ -1,0 +1,57 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import Markdown from "@components/common/Markdown.astro";
+
+const pageTitle = "推广赞助与联盟佣金披露 (Affiliate Disclosure)";
+const pageDescription = "vpntizi.cc 商业化运营与联盟推广返佣透明度声明。恪守编辑独立性与数据真实底线。";
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-8 py-8 relative w-full space-y-6">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                推广赞助与商业返佣披露声明
+            </h1>
+
+            <div class="text-xs text-black/50 dark:text-white/50 font-mono">
+                发布日期：2026年1月1日 · 持续遵循 FTC 及 Google 广告透明度规范
+            </div>
+
+            <Markdown class="mt-4 prose dark:prose-invert max-w-none">
+> **透明度承诺**：**vpntizi.cc 坚信：唯有保持 100% 的财务与商业关系透明，才能赢得读者的长久信赖。为了维持独立探针服务器、千兆测试带宽与高频内容迭代的高昂运营成本，本站参与了部分第三方服务商的合法联盟推广计划（Affiliate Programs）。**
+
+---
+
+### 一、什么是联盟推广链接（Affiliate Links）？
+
+1. **基本机制**：  
+   当您点击本站某些评测文章或品牌库中的「直达官网注册」超链接，并在该服务商处成功购买网络套餐时，该服务商可能会根据其公开的推广计划，向本站支付一定比例的维护返佣（Referral Commission）。
+2. **零价格加成法则（Zero Price Increase Rule）**：  
+   **通过本站提供的专属链接或输入优惠码（如 `AMM`、`flycat888`、`flat888` 等），您所需支付的实际价格绝不会增加！相反，通常能够获得官方公开价之外的专属限时折扣或折上折优惠。**
+
+---
+
+### 二、我们对“编辑独立性与客观性”的底线守则
+
+许多用户担忧：“如果你们收了推广返佣，评测结果还会客观吗？” 我们为此设立了三项不可逾越的“技术防火墙”：
+
+1. **真实数据至上原则（Data-Driven Integrity）**：  
+   - 节点的 Ping 延迟、晚高峰 500M 吞吐跑分、丢包率色块均由自动化测速探针真实采集；
+   - 即使某家服务商开出极高的佣金比例，但若其线路晚高峰频繁丢包、超售严重或存在跑路风险，本站评测室**坚决予以低分曝光或拒绝入库推荐**。
+2. **规范的出站链接属性标记**：  
+   - 本站全站严格执行 Google 搜索中心《关于付费与商业赞助链接的规范指南》；
+   - 所有商业邀请外链均强制携带 **`rel="nofollow sponsored noopener"`** 属性，绝不通过黑帽手段操纵搜索引擎权重。
+3. **主客观严格分离**：  
+   - 文章中的优势（Pros）与劣势风险提示（Cons）一视同仁，客观指出各品牌的适用场景与技术局限，帮助读者按需决策。
+
+---
+
+### 三、无从属关系与中立声明
+
+- 本站由独立的网络性能极客团队独立维护运营；
+- 本站与文中评测的所有 42 家机场品牌之间**不存在任何股权投资、人事任命或商业实体隶属关系**；
+- 评测中包含的商标、LOGO 及服务名称，其著作权与商标权均归其各自合法的权利人所有。
+            </Markdown>
+        </div>
+    </div>
+</MainGridLayout>

@@ -22,19 +22,19 @@ const processedLink = link;
 const hasChildren = processedLink.children && processedLink.children.length > 0;
 ---
 
-<div class:list={["dropdown-container", className]} data-dropdown>
+<div class:list={["dropdown-container shrink-0", className]} data-dropdown>
 	{hasChildren ? (
 		<button 
-			class="btn-plain scale-animation rounded-lg h-10 font-bold px-4 pr-8 active:scale-95 dropdown-trigger relative"
+			class="btn-plain scale-animation rounded-lg h-9 font-semibold px-2 xl:px-2.5 pr-5 xl:pr-6 active:scale-95 dropdown-trigger relative whitespace-nowrap shrink-0 text-[12.5px] xl:text-[13.5px] 2xl:text-[14px]"
 			aria-expanded="false"
 			aria-haspopup="true"
 			data-dropdown-trigger
 		>
-			<div class="flex items-center gap-1.5">
-				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.1rem] mr-1.5 navbar-icon" />}
-				{processedLink.name}
+			<div class="flex items-center gap-1 xl:gap-1.5 whitespace-nowrap">
+				{processedLink.icon && <Icon name={processedLink.icon} class="text-[0.95rem] xl:text-[1.05rem] mr-0.5 xl:mr-1 navbar-icon shrink-0 hidden xl:inline-block" />}
+				<span class="whitespace-nowrap">{processedLink.name}</span>
 			</div>
-			<Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-[1.2rem] transition-transform duration-200 dropdown-arrow absolute right-2.5 top-1/2 -translate-y-1/2" />
+			<Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-[0.95rem] xl:text-[1.05rem] transition-transform duration-200 dropdown-arrow absolute right-1 xl:right-1.5 top-1/2 -translate-y-1/2" />
 		</button>
 		<div class="dropdown-menu" data-dropdown-menu>
 			<DropdownPanel class="dropdown-content">
@@ -43,10 +43,10 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 						href={child.external ? child.url : url(child.url)}
 						target={child.external ? "_blank" : undefined}
 						isLast={index === (processedLink.children?.length || 0) - 1}
-						class="dropdown-item focus-ring-inset h-10"
+						class="dropdown-item focus-ring-inset h-10 whitespace-nowrap"
 					>
-						{child.icon && <Icon name={child.icon} class="text-[1.25rem] mr-3 navbar-icon" />}
-						<span>{child.name}</span>
+						{child.icon && <Icon name={child.icon} class="text-[1.15rem] mr-2.5 navbar-icon shrink-0" />}
+						<span class="whitespace-nowrap">{child.name}</span>
 						{child.external && (
 							<Icon name="fa7-solid:arrow-up-right-from-square" class="text-[0.75rem] text-black/25 dark:text-white/25 ml-auto" />
 						)}
@@ -59,11 +59,11 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 			aria-label={processedLink.name} 
 			href={processedLink.external ? processedLink.url : url(processedLink.url)} 
 			target={processedLink.external ? "_blank" : null}
-			class="btn-plain scale-animation rounded-lg h-10 font-bold px-4 active:scale-95"
+			class="btn-plain scale-animation rounded-lg h-9 font-semibold px-2 xl:px-3 active:scale-95 whitespace-nowrap shrink-0 text-[12.5px] xl:text-[13.5px] 2xl:text-[14px]"
 		>
-			<div class="flex items-center gap-1.5">
-				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.1rem] mr-1.5 navbar-icon" />}
-				{processedLink.name}
+			<div class="flex items-center gap-1 xl:gap-1.5 whitespace-nowrap">
+				{processedLink.icon && <Icon name={processedLink.icon} class="text-[0.95rem] xl:text-[1.05rem] mr-0.5 xl:mr-1 navbar-icon shrink-0 hidden xl:inline-block" />}
+				<span class="whitespace-nowrap">{processedLink.name}</span>
 				{processedLink.external && <Icon name="fa7-solid:arrow-up-right-from-square" class="text-[0.875rem] transition -translate-y-px ml-1 text-black/20 dark:text-white/20" />}
 			</div>
 		</a>

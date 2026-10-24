@@ -47,3 +47,4 @@ package/
 .codex*
 .claude
 .mimocode
+_templates_backup/

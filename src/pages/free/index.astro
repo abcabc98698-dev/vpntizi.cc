@@ -1,0 +1,254 @@
+---
+import { getSortedPosts } from "@/utils/content-utils";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const pageTitle = "免费机场与免费VPN风险揭秘 - 试用核验与低价安全替代方案";
+const pageDescription =
+	"深度曝光免费机场与免费VPN的隐私泄露风险与使用陷阱。提供正规免费试用核验技巧、限制条件对比及每月个位数费用的安全平替方案。";
+
+const allPosts = await getSortedPosts();
+
+const freeSlugs = [
+	"free-proxy-risks",
+	"free-trial-airports",
+	"free-vpn-comparison",
+	"low-cost-alternatives",
+];
+
+const categoryPosts = allPosts.filter((post) => {
+	const slug = post.id.replace(/\.(md|mdx)$/, "");
+	return freeSlugs.includes(slug) || post.data.category === "免费机场";
+});
+
+// JSON-LD 结构化数据
+const schemaGraph = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "CollectionPage",
+			"@id": "https://vpntizi.cc/free/#collection",
+			"name": pageTitle,
+			"description": pageDescription,
+			"url": "https://vpntizi.cc/free/",
+			"isPartOf": {
+				"@type": "WebSite",
+				"@id": "https://vpntizi.cc/#website",
+			},
+		},
+		{
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "首页",
+					"item": "https://vpntizi.cc/",
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "免费机场",
+					"item": "https://vpntizi.cc/free/",
+				},
+			],
+		},
+		{
+			"@type": "ItemList",
+			"name": "免费网络工具与安全避坑指南",
+			"description": pageDescription,
+			"numberOfItems": categoryPosts.length,
+			"itemListElement": categoryPosts.map((post, idx) => ({
+				"@type": "ListItem",
+				"position": idx + 1,
+				"item": {
+					"@type": "Article",
+					"headline": post.data.title,
+					"description": post.data.description,
+					"url": `https://vpntizi.cc/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`,
+					"datePublished": post.data.published.toISOString(),
+				},
+			})),
+		},
+		{
+			"@type": "FAQPage",
+			"mainEntity": [
+				{
+					"@type": "Question",
+					"name": "免费机场为什么存在严重安全风险？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "服务器与国际专线带宽成本极其昂贵，完全免费的节点通常靠植入恶意广告、劫持用户HTTP流量、记录并倒卖浏览历史或将用户设备转变为住宅代理黑产肉鸡来盈利。切勿在免费节点上登录银行或重要私人账户。",
+					},
+				},
+				{
+					"@type": "Question",
+					"name": "不想花大钱有什么安全的替代方案？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "市面上存在大量提供合规免费试用（如提供几小时或几G流量核验速度）的正规服务商；此外，单月5至10元左右的平民入门套餐，成本极低但拥有独立运维与协议加密，远比无保障的免费公共节点更安全可靠。",
+					},
+				},
+			],
+		},
+	],
+};
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+    <div class="space-y-6">
+        <!-- 面包屑导航 -->
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-black/50 dark:text-white/50 px-1">
+            <a href="/" class="hover:text-(--primary) transition-colors">首页</a>
+            <span>/</span>
+            <span class="text-black/80 dark:text-white/80 font-medium">免费机场</span>
+        </nav>
+
+        <!-- 栏目头部引导横幅 (Answer-First) -->
+        <div class="card-base p-6 sm:p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-600 dark:text-amber-400">
+                <span>⚠️ 风险预警 · 商业逻辑透视</span>
+                <span>•</span>
+                <span>更新时间：2026-10-24</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                免费机场与免费网络工具：安全风险、试用核验与低价安全替代
+            </h1>
+
+            <div class="text-sm text-black/75 dark:text-white/75 leading-relaxed space-y-3">
+                <p>
+                    <strong>【快速结论 (Answer-First)】</strong>：「免费的往往是最昂贵的」。
+                    跨境网络带宽存在刚性物理成本，纯粹永久免费的公共代理节点普遍存在<strong>流量嗅探、Cookie 盗取、中间人劫持与设备滥用风险</strong>。
+                    如果预算极其有限，应当选用<strong>商业机场提供的正规试用套餐</strong>进行连通性验证，或选择<strong>单月 5 - 10 元的安全平替服务</strong>，切莫贪图免费因小失大。
+                </p>
+
+                <!-- 栏目说明三要素 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 text-xs">
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-(--primary) mb-1">📌 栏目定位</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            剖析免费网络工具背后的商业变现模式与隐性代价，提供理性的安全防护指南。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-amber-500 mb-1">📖 覆盖内容</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            公共免费节点安全隐患、正规免费试用申请核验、免费 VPN 限制对比与月费数元的低价平替。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-emerald-500 mb-1">🎯 适合谁看</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            预算紧张的学生党、初涉科学上网的网民，以及在 Telegram 群中四处寻找免费白嫖节点的网络用户。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子专题入口 -->
+        <div class="space-y-3">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📑 免费工具核心专题
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                    href="/posts/free-proxy-risks/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-amber-500/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-amber-500 transition-colors">
+                        <span>⚠️</span>
+                        <span>免费机场与公共代理风险深度解析</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        从流量中间人嗅探、Cookie 劫持到出口 IP 牵连被封：公共免费节点背后的真实代价。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/free-trial-airports/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🔍</span>
+                        <span>免费试用机场靠谱吗？</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        如何核验正规商家的免费试用活动？辨别有效体验期与虚假钓鱼注册的实用技巧。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/free-vpn-comparison/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🛡️</span>
+                        <span>免费VPN与免费代理比较</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        主流免费 VPN 的带宽配额、限速策略、服务器节点限制与无日志声明显微镜审视。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/low-cost-alternatives/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>💡</span>
+                        <span>低价安全替代方案精选</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        预算每月仅需几元时，如何选出兼顾速度、稳定专线与个人隐私保护的良心服务？
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <!-- 栏目文章列表 -->
+        <div class="space-y-4 pt-2">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📚 免费机场文章精选 ({categoryPosts.length})
+            </h2>
+
+            <div class="grid grid-cols-1 gap-4">
+                {categoryPosts.map((post) => (
+                    <article class="card-base p-5 sm:p-6 rounded-2xl border border-black/5 dark:border-white/5 hover:shadow-md transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
+                            <h3 class="text-base sm:text-lg font-bold text-black/90 dark:text-white/90 hover:text-(--primary) transition-colors">
+                                <a href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}>
+                                    {post.data.title}
+                                </a>
+                            </h3>
+                            <time class="text-xs text-black/40 dark:text-white/40 shrink-0">
+                                {new Date(post.data.published).toLocaleDateString("zh-CN")}
+                            </time>
+                        </div>
+                        <p class="text-xs sm:text-sm text-black/65 dark:text-white/65 leading-relaxed line-clamp-2 mb-4">
+                            {post.data.description}
+                        </p>
+                        <div class="flex items-center justify-between text-xs pt-2 border-t border-black/5 dark:border-white/5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                {post.data.tags.map((tag: string) => (
+                                    <span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <a
+                                href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}
+                                class="font-semibold text-(--primary) hover:underline flex items-center gap-1"
+                            >
+                                <span>阅读全文</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>

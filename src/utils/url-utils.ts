@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/siteConfig";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 
@@ -44,6 +45,17 @@ export function getTagUrl(tag: string): string {
 	return url(`/archive/?tag=${encodeURIComponent(tag.trim())}`);
 }
 
+const CATEGORY_MAP: Record<string, string> = {
+	"VPN与机场": "/vpn/",
+	"机场推荐": "/jichang/",
+	"工具大对比": "/clash/",
+	"网络线路": "/nodes/",
+	"梯子推荐": "/tizi/",
+	"免费机场": "/free/",
+	"使用教程": "/tutorial/",
+	"选购指南": "/tutorial/",
+};
+
 export function getCategoryUrl(category: string | null): string {
 	if (
 		!category ||
@@ -51,7 +63,11 @@ export function getCategoryUrl(category: string | null): string {
 		category.trim().toLowerCase() === i18n(I18nKey.uncategorized).toLowerCase()
 	)
 		return url("/archive/?uncategorized=true");
-	return url(`/archive/?category=${encodeURIComponent(category.trim())}`);
+	const trimmed = category.trim();
+	if (CATEGORY_MAP[trimmed]) {
+		return url(CATEGORY_MAP[trimmed]);
+	}
+	return url(`/archive/?category=${encodeURIComponent(trimmed)}`);
 }
 
 export function getDir(path: string): string {
@@ -72,15 +88,16 @@ export function getSearchUrl(query: string): string {
 	return url(`/search/?q=${encodeURIComponent(query.trim())}`);
 }
 
-// 生成 canonical URL：仅对客户端筛选路由（/archive/ 与 /search/）剥离查询串，
-// 避免 ?tag=/?category=/?q= 这类服务端渲染下会被写进 Astro.url 的重复内容 URL
-// 自我 canonical。分页（/2/）、文章页等无查询串的路径保持原样。
+// 生成规范 canonical URL：
+// 1. 强制统一为正式域名（https://vpntizi.cc）
+// 2. 剥离所有查询参数（?tag=/?category=/?utm_等）
+// 3. 强制自引用尾部斜杠规范
 export function getCanonicalUrl(urlObj: URL): string {
-	const pathname = urlObj.pathname;
-	if (pathname === "/archive/" || pathname === "/search/") {
-		return new URL(pathname, urlObj.origin).toString();
+	let pathname = urlObj.pathname;
+	if (!pathname.endsWith("/")) {
+		pathname = `${pathname}/`;
 	}
-	return urlObj.toString();
+	return new URL(pathname, siteConfig.site_url).toString();
 }
 
 export function url(path: string): string {

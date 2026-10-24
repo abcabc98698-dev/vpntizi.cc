@@ -4,10 +4,11 @@ import { getSortedPosts } from "@utils/content-utils";
 import { url } from "@utils/url-utils";
 import type { APIRoute } from "astro";
 import { siteConfig } from "@/config";
+import { airports } from "@/data/airports";
 
 export const prerender = true;
 
-const RECENT_POSTS_COUNT = 20;
+const RECENT_POSTS_COUNT = 30;
 
 type KeyPage = {
 	labelKey: I18nKey;
@@ -105,12 +106,30 @@ export const GET: APIRoute = async ({ site }) => {
 		"",
 		"## Key Pages",
 	];
+	lines.push(
+		`- [首页](${abs("/")})`,
+		`- [机场品牌库](${abs("/brands/")}): 权威收录 42+ 家主流机场品牌与 17 家真实晚高峰跑分图，支持协议、专线与价格多维筛选`,
+		`- [关于本站](${abs("/about/")}): vpntizi.cc 站点使命、实测标准与客观中立声明`,
+		`- [评测方法论](${abs("/methodology/")}): 节点测速模型、晚高峰丢包压测标准与风控核验规范`,
+		`- [推广声明](${abs("/disclosure/")}): 商业赞助、返佣机制与编辑独立性透明度说明`,
+		`- [隐私政策](${abs("/privacy/")}): 访问者隐私保护承诺与数据处理规范`,
+		`- [服务条款](${abs("/terms/")}): 网站使用条款、技术免责声明与合法合规准则`,
+	);
 	for (const pageEntry of enabledPages) {
+		if (pageEntry.path === "/" || pageEntry.path === "/about/") continue;
 		const label = i18n(pageEntry.labelKey);
 		const link = abs(pageEntry.path);
 		const desc = pageEntry.descKey ? i18n(pageEntry.descKey) : "";
 		lines.push(
 			desc ? `- [${label}](${link}): ${desc}` : `- [${label}](${link})`,
+		);
+	}
+	lines.push("", "## Verified Airport Brand Reviews (42 Brands)");
+	for (const brand of airports) {
+		const link = abs(`/posts/airport-${brand.slug}/`);
+		const hasImg = brand.hasSpeedtestImage ? " [含晚高峰真实跑分图]" : "";
+		lines.push(
+			`- [${brand.name}](${link}): 排名 #${brand.rank} · ${brand.lineTypes.join("/")} · 起步 ${brand.minPrice} · ${brand.summary}${hasImg}`,
 		);
 	}
 	lines.push("", "## Recent Posts");

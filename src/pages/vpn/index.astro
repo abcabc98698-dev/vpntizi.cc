@@ -1,0 +1,259 @@
+---
+import { getSortedPosts } from "@/utils/content-utils";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const pageTitle = "VPN与机场深度对比 - 连接原理、技术架构与选型指南";
+const pageDescription =
+	"深度解析VPN与机场订阅的本质差异。从底层加密隧道、代理协议、节点拓扑、客户端生态到使用成本与晚高峰稳定性，帮助用户厘清技术边界，做出适合自身网络环境与预算的理性选择。";
+
+const allPosts = await getSortedPosts();
+
+// 筛选该栏目相关文章
+const vpnSlugs = [
+	"vpn-and-airport-difference",
+	"is-ladder-always-vpn",
+	"beginner-vpn-or-airport-guide",
+	"why-some-airports-need-custom-client",
+	"vpn-vs-proxy-deep-dive",
+];
+
+const categoryPosts = allPosts.filter((post) => {
+	const slug = post.id.replace(/\.(md|mdx)$/, "");
+	return vpnSlugs.includes(slug) || post.data.category === "VPN与机场";
+});
+
+// JSON-LD 结构化数据 (GEO / AEO 深度增强)
+const schemaGraph = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "CollectionPage",
+			"@id": "https://vpntizi.cc/vpn/#collection",
+			"name": pageTitle,
+			"description": pageDescription,
+			"url": "https://vpntizi.cc/vpn/",
+			"isPartOf": {
+				"@type": "WebSite",
+				"@id": "https://vpntizi.cc/#website",
+			},
+		},
+		{
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "首页",
+					"item": "https://vpntizi.cc/",
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "VPN与机场",
+					"item": "https://vpntizi.cc/vpn/",
+				},
+			],
+		},
+		{
+			"@type": "ItemList",
+			"name": "VPN与机场核心深度指南",
+			"description": pageDescription,
+			"numberOfItems": categoryPosts.length,
+			"itemListElement": categoryPosts.map((post, idx) => ({
+				"@type": "ListItem",
+				"position": idx + 1,
+				"item": {
+					"@type": "Article",
+					"headline": post.data.title,
+					"description": post.data.description,
+					"url": `https://vpntizi.cc/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`,
+					"datePublished": post.data.published.toISOString(),
+				},
+			})),
+		},
+		{
+			"@type": "FAQPage",
+			"mainEntity": [
+				{
+					"@type": "Question",
+					"name": "VPN和机场的核心区别是什么？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "VPN基于操作系统级虚拟网卡，强制加密接管整机全部网络流量，主打高安全性与点对点保密；机场本质是应用层分流代理，通过Shadowsocks、Vmess、Trojan等协议与规则分流实现按需绕过封锁，主打高吞吐、低延迟与晚高峰网页加速。",
+					},
+				},
+				{
+					"@type": "Question",
+					"name": "新手翻墙首选VPN还是机场？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "若主要需求为日常浏览网页、观看YouTube/Netflix 4K视频、访问ChatGPT或查阅文献，且预算有限，机场是更实用的选择；若涉及海外网银登录、跨境远程办公加密通道或高安全隐私需求，商业VPN更具优势。",
+					},
+				},
+			],
+		},
+	],
+};
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+    <div class="space-y-6">
+        <!-- 面包屑导航 -->
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-black/50 dark:text-white/50 px-1">
+            <a href="/" class="hover:text-(--primary) transition-colors">首页</a>
+            <span>/</span>
+            <span class="text-black/80 dark:text-white/80 font-medium">VPN与机场</span>
+        </nav>
+
+        <!-- 栏目头部引导横幅 (Answer-First) -->
+        <div class="card-base p-6 sm:p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-(--primary)/10 text-(--primary)">
+                <span>🛡️ 核心概念 · 技术边界厘清</span>
+                <span>•</span>
+                <span>更新时间：2026-10-24</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                VPN 与机场：连接架构、技术原理与选型全景指南
+            </h1>
+
+            <div class="text-sm text-black/75 dark:text-white/75 leading-relaxed space-y-3">
+                <p>
+                    <strong>【核心结论 (Answer-First)】</strong>：中文语境下常说的「梯子」并非都等于 VPN。
+                    <strong>VPN（虚拟专用网络）</strong>工作在网络层或数据链路层，通过高强度加密隧道接管全局流量，设计初衷是私密安全；
+                    而<strong>机场（代理订阅服务）</strong>工作在应用层或传输层，通过特定协议与智能规则分流，设计初衷是快速绕过封锁并保证跨国流媒体吞吐率。
+                </p>
+                
+                <!-- 栏目说明三要素：定位、覆盖内容、适合谁看 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 text-xs">
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-(--primary) mb-1">📌 栏目定位</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            打破名词混淆，从底层网络协议、传输模式与客户端逻辑入手，厘清两种技术路线的根本差异。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-amber-500 mb-1">📖 覆盖内容</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            VPN 原理与用途、机场订阅机制、客户端接管模式、月付/年付成本对比与适用人群矩阵。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-emerald-500 mb-1">🎯 适合谁看</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            分不清翻墙工具类型的新手用户，以及对网络隐私安全与海外访问速度有明确权衡需求的人群。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子栏目入口与核心专题推荐 -->
+        <div class="space-y-3">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📑 子专题与核心路径推荐
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                    href="/posts/vpn-and-airport-difference/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>⚖️</span>
+                        <span>VPN和机场有什么区别？</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        从系统层虚拟网卡与应用层分流代理的底层机制出发，全方位对比连接原理、客户端配置难度及使用成本。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/is-ladder-always-vpn/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🪜</span>
+                        <span>梯子一定是VPN吗？</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        解析代理软件、VPN服务与机场订阅的包含关系。揭秘为何大众习惯统称为梯子但技术实现迥异。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/beginner-vpn-or-airport-guide/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🧭</span>
+                        <span>新手到底需要VPN还是机场？</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        按使用设备（手机/电脑/软路由）、预算范围（单月几元到几十元）与实际业务需求进行量化分析选型。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/why-some-airports-need-custom-client/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>📲</span>
+                        <span>专属客户端与通用订阅差异</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        为什么有些服务商强制使用专属一键登录软件？通用 Clash 订阅与专属客户端各自的优缺点与适用场景。
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <!-- 栏目文章列表 -->
+        <div class="space-y-4 pt-2">
+            <div class="flex items-center justify-between px-1">
+                <h2 class="text-lg font-bold text-black/90 dark:text-white/90">
+                    📚 栏目深度文章精选 ({categoryPosts.length})
+                </h2>
+                <span class="text-xs text-black/50 dark:text-white/50">已按客观实测标准校验</span>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4">
+                {categoryPosts.map((post) => (
+                    <article class="card-base p-5 sm:p-6 rounded-2xl border border-black/5 dark:border-white/5 hover:shadow-md transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
+                            <h3 class="text-base sm:text-lg font-bold text-black/90 dark:text-white/90 hover:text-(--primary) transition-colors">
+                                <a href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}>
+                                    {post.data.title}
+                                </a>
+                            </h3>
+                            <time class="text-xs text-black/40 dark:text-white/40 shrink-0">
+                                {new Date(post.data.published).toLocaleDateString("zh-CN")}
+                            </time>
+                        </div>
+                        <p class="text-xs sm:text-sm text-black/65 dark:text-white/65 leading-relaxed line-clamp-2 mb-4">
+                            {post.data.description}
+                        </p>
+                        <div class="flex items-center justify-between text-xs pt-2 border-t border-black/5 dark:border-white/5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                {post.data.tags.map((tag: string) => (
+                                    <span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <a
+                                href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}
+                                class="font-semibold text-(--primary) hover:underline flex items-center gap-1"
+                            >
+                                <span>阅读全文</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>

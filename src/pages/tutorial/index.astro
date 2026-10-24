@@ -1,0 +1,288 @@
+---
+import { getSortedPosts } from "@/utils/content-utils";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const pageTitle = "科学上网使用教程与选购防坑指南 - 客户端导入/分流/测速全解";
+const pageDescription =
+	"一站式网络代理使用教程与选购防坑指南。涵盖代理客户端安全下载、订阅导入与配置转换、节点策略与规则分流、IP与DNS泄露检测、月付年付决策与测速解读。";
+
+const allPosts = await getSortedPosts();
+
+const tutorialSlugs = [
+	"client-download-directory",
+	"subscription-import-tutorial",
+	"rule-routing-and-proxy-modes",
+	"ip-dns-leak-test-guide",
+	"beginner-vpn-or-airport-guide",
+	"monthly-vs-yearly-subscription",
+	"how-to-read-speedtest-results",
+	"avoid-bad-proxy-services",
+];
+
+const categoryPosts = allPosts.filter((post) => {
+	const slug = post.id.replace(/\.(md|mdx)$/, "");
+	return (
+		tutorialSlugs.includes(slug) ||
+		post.data.category === "使用教程" ||
+		post.data.category === "选购指南"
+	);
+});
+
+// JSON-LD 结构化数据
+const schemaGraph = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "CollectionPage",
+			"@id": "https://vpntizi.cc/tutorial/#collection",
+			"name": pageTitle,
+			"description": pageDescription,
+			"url": "https://vpntizi.cc/tutorial/",
+			"isPartOf": {
+				"@type": "WebSite",
+				"@id": "https://vpntizi.cc/#website",
+			},
+		},
+		{
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "首页",
+					"item": "https://vpntizi.cc/",
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "使用教程",
+					"item": "https://vpntizi.cc/tutorial/",
+				},
+			],
+		},
+		{
+			"@type": "ItemList",
+			"name": "使用教程与选购指南核心实操手册",
+			"description": pageDescription,
+			"numberOfItems": categoryPosts.length,
+			"itemListElement": categoryPosts.map((post, idx) => ({
+				"@type": "ListItem",
+				"position": idx + 1,
+				"item": {
+					"@type": "Article",
+					"headline": post.data.title,
+					"description": post.data.description,
+					"url": `https://vpntizi.cc/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`,
+					"datePublished": post.data.published.toISOString(),
+				},
+			})),
+		},
+		{
+			"@type": "FAQPage",
+			"mainEntity": [
+				{
+					"@type": "Question",
+					"name": "新手拿到机场订阅链接后应该怎么做？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "首先下载对应操作系统的官方正版客户端（Windows推荐Clash Verge Rev，iOS在非国区App Store下载Shadowrocket，Android下载Clash Meta）；然后复制机场官网的订阅链接，在客户端中选择「从URL导入」；最后选择合适节点并开启系统代理或TUN模式即可畅联。",
+					},
+				},
+				{
+					"@type": "Question",
+					"name": "规则分流、全局模式和直连模式有什么区别？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "规则模式会根据域名规则分流，访问百度、微信等国内流量直连，海外流量走代理节点，最适合日常挂机；全局模式将所有流量强制走代理，常用于解决冷门网站打不开或特殊调试；直连模式则不经过任何代理服务器。",
+					},
+				},
+			],
+		},
+	],
+};
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+    <div class="space-y-6">
+        <!-- 面包屑导航 -->
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-black/50 dark:text-white/50 px-1">
+            <a href="/" class="hover:text-(--primary) transition-colors">首页</a>
+            <span>/</span>
+            <span class="text-black/80 dark:text-white/80 font-medium">使用教程</span>
+        </nav>
+
+        <!-- 栏目头部引导横幅 (Answer-First) -->
+        <div class="card-base p-6 sm:p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-(--primary)/10 text-(--primary)">
+                <span>📖 实操手册 · 全流程排坑</span>
+                <span>•</span>
+                <span>更新时间：2026-10-24</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                科学上网实用教程与选购防坑宝典：从配置导入到分流规则全流程
+            </h1>
+
+            <div class="text-sm text-black/75 dark:text-white/75 leading-relaxed space-y-3">
+                <p>
+                    <strong>【快速结论 (Answer-First)】</strong>：科学上网的稳定体验遵循「三分买、七分调」。
+                    即便购买了顶级专线，若客户端配置不当（如 DNS 污染、规则失效导致流量回环或微信走代理），体验也会大打折扣。
+                    本专栏提供从<strong>正版客户端安全下载</strong>、<strong>一键导入与订阅转换</strong>、<strong>智能分流规则设置</strong>到<strong>IP/DNS 隐私泄漏测试</strong>的完整闭环教程，并附有严谨的选购避坑原则。
+                </p>
+
+                <!-- 栏目说明三要素 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 text-xs">
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-(--primary) mb-1">📌 栏目定位</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            面向零基础用户与进阶玩家的图文并茂实操指南，解决配置不生效与选购被坑痛点。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-amber-500 mb-1">📖 覆盖内容</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            客户端下载大全、配置导入教程、分流规则配置、DNS泄露自测、月付年付决策与测速图解读。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-emerald-500 mb-1">🎯 适合谁看</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            刚刚拿到订阅链接不知如何配置的新手，以及在使用中遇到连接错误、国内网站变慢或隐私担忧的用户。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子专题入口 -->
+        <div class="space-y-3">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📑 核心实操与选购指南专题
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                    href="/posts/client-download-directory/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>📥</span>
+                        <span>官方代理客户端下载与安全校验</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        Clash Verge、v2rayN、Shadowrocket 等主流客户端的官方 GitHub 开源地址与 SHA-256 校验防伪指南。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/subscription-import-tutorial/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🔄</span>
+                        <span>机场订阅导入与配置转换教程</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        图文详解如何将通用订阅链接一键导入客户端，以及节点更新失败、无法解析时的排查技巧。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/rule-routing-and-proxy-modes/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🧭</span>
+                        <span>节点策略切换与规则分流模式配置</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        全局、规则与直连模式有什么区别？如何配置国内直连分流以避免微信、网银变慢。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/ip-dns-leak-test-guide/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🛡️</span>
+                        <span>IP与DNS泄露在线检测与排查实战</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        实测代理连接是否真正隐藏真实 IP？如何排查 WebRTC 与 DNS 泄漏以保护网络隐私。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/monthly-vs-yearly-subscription/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>📅</span>
+                        <span>机场月付还是年付？成本与跑路风险权衡</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        深度算账：年付折扣诱惑背后的商家跑路风险与线路衰减概率。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/how-to-read-speedtest-results/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>📊</span>
+                        <span>如何看懂测速跑分与晚高峰表现</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        别被“一键千兆跑分”蒙蔽：解析丢包率、首字响应延迟与晚高峰压力测试的真实意义。
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <!-- 栏目文章列表 -->
+        <div class="space-y-4 pt-2">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📚 教程与选购文章精选 ({categoryPosts.length})
+            </h2>
+
+            <div class="grid grid-cols-1 gap-4">
+                {categoryPosts.map((post) => (
+                    <article class="card-base p-5 sm:p-6 rounded-2xl border border-black/5 dark:border-white/5 hover:shadow-md transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
+                            <h3 class="text-base sm:text-lg font-bold text-black/90 dark:text-white/90 hover:text-(--primary) transition-colors">
+                                <a href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}>
+                                    {post.data.title}
+                                </a>
+                            </h3>
+                            <time class="text-xs text-black/40 dark:text-white/40 shrink-0">
+                                {new Date(post.data.published).toLocaleDateString("zh-CN")}
+                            </time>
+                        </div>
+                        <p class="text-xs sm:text-sm text-black/65 dark:text-white/65 leading-relaxed line-clamp-2 mb-4">
+                            {post.data.description}
+                        </p>
+                        <div class="flex items-center justify-between text-xs pt-2 border-t border-black/5 dark:border-white/5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                {post.data.tags.map((tag: string) => (
+                                    <span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <a
+                                href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}
+                                class="font-semibold text-(--primary) hover:underline flex items-center gap-1"
+                            >
+                                <span>阅读全文</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>

@@ -1,0 +1,257 @@
+---
+import { getSortedPosts } from "@/utils/content-utils";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const pageTitle = "Clash客户端与代理工具全方位对比评测 - v2rayN/Shadowrocket";
+const pageDescription =
+	"全方位对比 Clash Verge、v2rayN、Shadowrocket 与 Sing-box 等主流代理客户端。解析专属客户端与通用客户端优缺点、规则分流原理与同预算工具选型。";
+
+const allPosts = await getSortedPosts();
+
+const clashSlugs = [
+	"clash-vs-v2rayn",
+	"why-some-airports-need-custom-client",
+	"vpn-vs-proxy-deep-dive",
+	"same-budget-comparison",
+	"clash-v2rayn-shadowrocket-explained",
+];
+
+const categoryPosts = allPosts.filter((post) => {
+	const slug = post.id.replace(/\.(md|mdx)$/, "");
+	return clashSlugs.includes(slug) || post.data.category === "工具大对比";
+});
+
+// JSON-LD 结构化数据
+const schemaGraph = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "CollectionPage",
+			"@id": "https://vpntizi.cc/clash/#collection",
+			"name": pageTitle,
+			"description": pageDescription,
+			"url": "https://vpntizi.cc/clash/",
+			"isPartOf": {
+				"@type": "WebSite",
+				"@id": "https://vpntizi.cc/#website",
+			},
+		},
+		{
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "首页",
+					"item": "https://vpntizi.cc/",
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "工具大对比",
+					"item": "https://vpntizi.cc/clash/",
+				},
+			],
+		},
+		{
+			"@type": "ItemList",
+			"name": "代理工具与客户端对比精选",
+			"description": pageDescription,
+			"numberOfItems": categoryPosts.length,
+			"itemListElement": categoryPosts.map((post, idx) => ({
+				"@type": "ListItem",
+				"position": idx + 1,
+				"item": {
+					"@type": "Article",
+					"headline": post.data.title,
+					"description": post.data.description,
+					"url": `https://vpntizi.cc/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`,
+					"datePublished": post.data.published.toISOString(),
+				},
+			})),
+		},
+		{
+			"@type": "FAQPage",
+			"mainEntity": [
+				{
+					"@type": "Question",
+					"name": "Clash与v2rayN哪个更适合新手？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "对于macOS与现代Windows用户，基于Meta核心的Clash Verge Rev在UI颜值、系统代理一键托管及规则分流上更直观友好；而v2rayN对底层协议（VLESS、Xray、Reality等）支持极其前沿且占用极低，更适合偏好精细调试的技术用户。",
+					},
+				},
+				{
+					"@type": "Question",
+					"name": "专属客户端与通用客户端怎么选？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "专属客户端开箱即用，通过账号密码登录即可自动同步节点，免去复制订阅链接的步骤，适合纯零基础小白；但通用客户端（如Clash、Shadowrocket）支持多机场订阅合并、自定义分流规则与多平台一致体验，自由度更高且避免厂商锁定。",
+					},
+				},
+			],
+		},
+	],
+};
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+    <div class="space-y-6">
+        <!-- 面包屑导航 -->
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-black/50 dark:text-white/50 px-1">
+            <a href="/" class="hover:text-(--primary) transition-colors">首页</a>
+            <span>/</span>
+            <span class="text-black/80 dark:text-white/80 font-medium">工具大对比</span>
+        </nav>
+
+        <!-- 栏目头部引导横幅 (Answer-First) -->
+        <div class="card-base p-6 sm:p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-(--primary)/10 text-(--primary)">
+                <span>⚙️ 客户端生态 · 协议横评</span>
+                <span>•</span>
+                <span>更新时间：2026-10-24</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                代理工具与客户端全方位评测：Clash、v2rayN、专属客户端与协议对比
+            </h1>
+
+            <div class="text-sm text-black/75 dark:text-white/75 leading-relaxed space-y-3">
+                <p>
+                    <strong>【快速结论 (Answer-First)】</strong>：翻墙体验不仅取决于服务器线路，客户端的选择同样至关重要。
+                    现代科学上网中，<strong>Clash Verge Rev</strong> 已成为跨平台通用分流首选；
+                    Windows 环境下的 <strong>v2rayN</strong> 则是协议前沿与低资源占用的代表；
+                    iOS 移动端首选 <strong>Shadowrocket（小火箭）</strong>；
+                    而追求零学习成本的用户，配备<strong>专属定制客户端</strong>的服务商能提供一键连接的省心体验。
+                </p>
+
+                <!-- 栏目说明三要素 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 text-xs">
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-(--primary) mb-1">📌 栏目定位</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            全面横评各主流客户端的功能特长、协议支持度、分流规则性能与配置复杂度。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-amber-500 mb-1">📖 覆盖内容</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            VPN技术对比代理、Clash与v2rayN深度实测、专属客户端与通用订阅权衡、同预算服务性价比对比。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-emerald-500 mb-1">🎯 适合谁看</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            在不同代理软件间纠结的用户，以及想要优化规则分流、降低内存占用与提升稳定性的进阶玩家。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子专题入口 -->
+        <div class="space-y-3">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📑 工具对比精选专题
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                    href="/posts/clash-vs-v2rayn/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>⚔️</span>
+                        <span>Clash与v2rayN对比评测</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        界面交互、分流规则定制、内存占用与底层内核（Mihomo vs Xray）深度对比实测。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/why-some-airports-need-custom-client/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>📱</span>
+                        <span>专属客户端与通用订阅差异</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        为什么有些机场必须使用专属客户端？账号密码登录与通用订阅链接的安全性与自由度权衡。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/vpn-vs-proxy-deep-dive/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🛡️</span>
+                        <span>VPN技术深度对比代理</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        技术原理、协议加密深度、系统接管范围与实际适用场景全方位对比。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/same-budget-comparison/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>💵</span>
+                        <span>同预算服务横向比较</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        在相同价格预算下（例如每月20元或每年100元），不同服务商的带宽、专线与稳定性怎么选？
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <!-- 栏目文章列表 -->
+        <div class="space-y-4 pt-2">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📚 工具对比与客户端指南 ({categoryPosts.length})
+            </h2>
+
+            <div class="grid grid-cols-1 gap-4">
+                {categoryPosts.map((post) => (
+                    <article class="card-base p-5 sm:p-6 rounded-2xl border border-black/5 dark:border-white/5 hover:shadow-md transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
+                            <h3 class="text-base sm:text-lg font-bold text-black/90 dark:text-white/90 hover:text-(--primary) transition-colors">
+                                <a href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}>
+                                    {post.data.title}
+                                </a>
+                            </h3>
+                            <time class="text-xs text-black/40 dark:text-white/40 shrink-0">
+                                {new Date(post.data.published).toLocaleDateString("zh-CN")}
+                            </time>
+                        </div>
+                        <p class="text-xs sm:text-sm text-black/65 dark:text-white/65 leading-relaxed line-clamp-2 mb-4">
+                            {post.data.description}
+                        </p>
+                        <div class="flex items-center justify-between text-xs pt-2 border-t border-black/5 dark:border-white/5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                {post.data.tags.map((tag: string) => (
+                                    <span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <a
+                                href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}
+                                class="font-semibold text-(--primary) hover:underline flex items-center gap-1"
+                            >
+                                <span>阅读全文</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>

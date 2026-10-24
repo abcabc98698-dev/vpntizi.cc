@@ -1,0 +1,68 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import Markdown from "@components/common/Markdown.astro";
+
+const pageTitle = "隐私政策 (Privacy Policy)";
+const pageDescription = "vpntizi.cc 隐私保护声明与个人信息处理规则。我们承诺严格保护访问者数据，不记录敏感网络足迹。";
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-8 py-8 relative w-full space-y-6">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                隐私政策与数据安全声明
+            </h1>
+
+            <div class="text-xs text-black/50 dark:text-white/50 font-mono">
+                生效日期：2026年1月1日 · 最近修订核验：2026年10月24日
+            </div>
+
+            <Markdown class="mt-4 prose dark:prose-invert max-w-none">
+> **核心承诺**：**vpntizi.cc 始终将访问者的隐私与数据主权置于首位。本站仅作为网络技术评测与选购知识库运作，不要求用户注册账号，不收集个人身份信息（PII），更不会在后台部署任何形式的跨站追踪脚本或数据倒卖模块。**
+
+---
+
+### 一、我们收集与不收集的信息
+
+1. **我们坚决不收集的数据**：
+   - 我们**不收集**您的真实姓名、身份证号、家庭住址或电话号码；
+   - 我们**不收集**您的任何支付信息（银行卡号、支付宝/微信账户密钥等）；
+   - 我们**绝不记录**您在浏览器中输入的任何账号密码、敏感搜索词或私人通信内容。
+
+2. **系统自动化基础日志（Web Server Logs）**：
+   - 与绝大多数现代互联网站点相同，当您访问本站时，托管服务器可能会自动记录极简的基础技术日志，包括：访问时间戳、请求的网页路径、浏览器 User-Agent 类型及模糊化的 IP 归属地（仅精确至省份/国家级别）。
+   - 该日志仅用于防御恶意 DDoS 洪水攻击、自动化爬虫恶意穿透以及排查服务器故障，通常在 14 天内被自动循环覆盖并永久销毁。
+
+---
+
+### 二、Cookie 与本地存储（Local Storage）的使用
+
+1. **偏好设置存储**：
+   - 本站使用本地微量存储仅用于记录您的界面交互偏好，例如：**亮色/暗色主题模式切换**、**多维品牌大厅的筛选器勾选状态**。
+2. **拒绝 Cookie 的权利**：
+   - 您随时可以在浏览器设置中禁用或清除本站的 Local Storage 与 Cookie，这不会影响您正常阅读本站的任何核心评测文章与技术指南。
+
+---
+
+### 三、第三方服务与外部链接说明
+
+1. **外部服务商跳转**：
+   - 本站正文中包含指向第三方机场、网络工具或官方开源仓库的超链接。当您点击这些外链离开本站时，您将直接受该第三方站点的隐私政策与服务条款约束。
+2. **合规安全审计**：
+   - 我们强烈建议您在向任何第三方网络服务商支付或提供注册信息前，仔细查阅其官方隐私声明与数据保管机制。
+
+---
+
+### 四、未成年人隐私保护
+
+本站内容面向具备完全民事行为能力的技术学习者、科研人员、跨境外贸从业者与个人开发者。若您未满 18 周岁，请在监护人指导下查阅相关科普内容。
+
+---
+
+### 五、联系方式与条款变更
+
+随着网络合规要求的发展，我们可能会适时更新本政策。如有任何关于本隐私声明的疑问或建议，请通过关于页面公布的官方渠道与评测团队取得联系。
+            </Markdown>
+        </div>
+    </div>
+</MainGridLayout>

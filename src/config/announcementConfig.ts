@@ -5,7 +5,7 @@ export const announcementConfig: AnnouncementConfig = {
 	title: "",
 
 	// 公告内容
-	content: "欢迎来到我的博客！这是一则示例公告。",
+	content: "欢迎访问 VPN梯子 (vpntizi.cc)！2026 最新 28 家主流机场测速矩阵与选购指南已更新，涵盖中转、IPLC 专线与流媒体解锁深度横评。",
 
 	// 是否允许用户关闭公告
 	closable: true,
@@ -14,9 +14,9 @@ export const announcementConfig: AnnouncementConfig = {
 		// 启用链接
 		enable: true,
 		// 链接文本
-		text: "了解更多",
+		text: "查看品牌库",
 		// 链接 URL
-		url: "/about/",
+		url: "/brands/",
 		// 内部链接
 		external: false,
 	},

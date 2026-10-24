@@ -1,0 +1,77 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import Markdown from "@components/common/Markdown.astro";
+
+const pageTitle = "评测方法论与数据采集标准 (Testing Methodology)";
+const pageDescription = "vpntizi.cc 节点测速模型、晚高峰丢包压测标准、流媒体与AI风控检测规范全景公开。";
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-8 py-8 relative w-full space-y-6">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                评测方法论与数据核验标准
+            </h1>
+
+            <div class="text-xs text-black/50 dark:text-white/50 font-mono">
+                发布日期：2026年1月1日 · 遵循严谨、可验证、可复现的工程测试原则
+            </div>
+
+            <Markdown class="mt-4 prose dark:prose-invert max-w-none">
+> **评测宗旨**：**拒绝虚标宣传，破除信息不对称。本方法论公开说明 `vpntizi.cc` 评测团队在对 42+ 家服务商进行技术架构审计、晚高峰测速、AI 穿透与长期可用率监控时所遵循的标准化工程规范。**
+
+---
+
+### 一、基准硬件测试环境与探针拓扑
+
+为了杜绝本地硬件或单一家宽出口的偶发干扰，我们的基准测试体系由三地多线探针组成：
+
+\`\`\`txt
+【自动化基准测试网络拓扑】
+┌────────────────────────────────────────────────────────┐
+│ 探针 A (南方核心)：广州电信千兆 FTTH (物理直连深港专线入口) │
+├────────────────────────────────────────────────────────┤
+│ 探针 B (华东核心)：上海联通 9929 / BGP 骨干网接入      │
+├────────────────────────────────────────────────────────┤
+│ 探针 C (北方核心)：北京移动千兆家宽 (验证三网穿透兼容性)│
+└────────────────────────────────────────────────────────┘
+\`\`\`
+
+- **测试终端硬件**：Intel Core i7 / 32GB RAM / PCIe 4.0 NVMe SSD，排除客户端 CPU 性能瓶颈。
+- **底层测试内核**：统一基于开源 **Mihomo (原 Clash.Meta 最新稳定核心)** 与 **Xray-core** 驱动。
+
+---
+
+### 二、三大核心测试维度与可量化指标
+
+#### 1. 黄金晚高峰带宽吞吐测试 (Peak-Hour Throughput)
+- **测试时段**：严格锁定在全天网络最高峰期 **20:30 ~ 22:30**。白天闲时的测速仅作为基准对照，不作为核心评分依据；
+- **测试工具**：基于开源自动化测速框架（`MAI-TEST-BOT` / `Speedtest-CLI`）向海外真实高防骨干节点发起多轮单线程与多线程压测；
+- **核心判定指标**：以**单线程吞吐能力（Single-Connection Speed）**为第一权重。
+
+#### 2. ICMP / TCP 丢包率与往返时延抖动 (Latency & Jitter)
+- 探针向目标落地节点连续发送 **200 个高频探测包**；
+- **卓越线 (Tier 1)**：晚高峰丢包率严格保持在 **低于 0.5%**，RTT 抖动低于 3ms；
+- **及格线 (Tier 2)**：丢包率保持在 **低于 2.0%**；
+- **淘汰线**：丢包率持续超过 **5.0%** 的服务，在综合评分中予以风险降级警告。
+
+#### 3. AI 大模型与国际流媒体风控穿透核验
+- **核验工具**：基于 `RegionRestrictionCheck` 自动化脚本结合真实浏览器无痕模式实测；
+- **OpenAI / Claude 核验**：
+  - 检查 ASN 属性，区分原生商业宽带/住宅 ISP 与廉价机房 IP；
+  - 验证访问 ChatGPT-4o 与 Claude 3.5 Sonnet 时是否遭遇 Cloudflare Access Denied 拦截或九宫格人机风控。
+- **Netflix / Disney+ 版权库核验**：
+  - 针对 Netflix，必须成功播放该国**非自制独播版权影视剧**（如特定地区的院线独播电影）才判定为“完整原生解锁”。
+
+---
+
+### 三、评分天梯与排期更新机制
+
+1. **五维综合加权模型**：  
+   `最终评级 = 晚高峰抗丢包 (30%) + 物理专线架构 (25%) + 原生解锁纯净度 (20%) + 连续无故障运营年份 (15%) + 资费与月付灵活性 (10%)`
+2. **季度复测与动态打分**：  
+   评测室每季度对所有 42 家入库品牌执行全量复测。若某服务商连续两次出现严重超售、节点大面积失效或出现无法履约现象，评测室将下调其推荐等级并向读者发布预警。
+            </Markdown>
+        </div>
+    </div>
+</MainGridLayout>

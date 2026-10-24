@@ -1,0 +1,312 @@
+---
+import { getSortedPosts } from "@/utils/content-utils";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const pageTitle = "2026机场推荐与客观实测指南 - 性价比/稳定专线/AI流媒体精选";
+const pageDescription =
+	"精选2026好用机场推荐。涵盖IEPL/IPLC内网专线、超低延迟、晚高峰不卡顿、ChatGPT与Netflix 4K解锁能力及单月低价高性价比套餐实测盘点。附42+主流机场品牌跑分数据库。";
+
+const allPosts = await getSortedPosts();
+
+// 筛选核心综合评测文章与机场品牌评测
+const coreJichangSlugs = [
+	"airport-recommendations-guide",
+	"cost-effective-airports",
+	"iplc-iepl-airports",
+	"ai-streaming-airports",
+];
+
+const corePosts = allPosts.filter((post) => {
+	const slug = post.id.replace(/\.(md|mdx)$/, "");
+	return coreJichangSlugs.includes(slug);
+});
+
+// 获取所有机场品牌独立评测文章
+const brandPosts = allPosts.filter((post) => {
+	const slug = post.id.replace(/\.(md|mdx)$/, "");
+	return slug.startsWith("airport-") && !coreJichangSlugs.includes(slug);
+});
+
+// JSON-LD 结构化数据
+const schemaGraph = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "CollectionPage",
+			"@id": "https://vpntizi.cc/jichang/#collection",
+			"name": pageTitle,
+			"description": pageDescription,
+			"url": "https://vpntizi.cc/jichang/",
+			"isPartOf": {
+				"@type": "WebSite",
+				"@id": "https://vpntizi.cc/#website",
+			},
+		},
+		{
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "首页",
+					"item": "https://vpntizi.cc/",
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "机场推荐",
+					"item": "https://vpntizi.cc/jichang/",
+				},
+			],
+		},
+		{
+			"@type": "ItemList",
+			"name": "2026机场推荐综合核心评测",
+			"description": pageDescription,
+			"numberOfItems": corePosts.length,
+			"itemListElement": corePosts.map((post, idx) => ({
+				"@type": "ListItem",
+				"position": idx + 1,
+				"item": {
+					"@type": "Article",
+					"headline": post.data.title,
+					"description": post.data.description,
+					"url": `https://vpntizi.cc/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`,
+					"datePublished": post.data.published.toISOString(),
+				},
+			})),
+		},
+		{
+			"@type": "FAQPage",
+			"mainEntity": [
+				{
+					"@type": "Question",
+					"name": "如何挑选真正好用的稳定机场？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "挑选稳定机场应重点看三个指标：第一是链路架构，优先选择具备真实IEPL/IPLC内网专线的服务商；第二是晚高峰（20:00-23:00）的实际丢包率是否低于0.5%；第三是节点冗余能力，是否拥有多条互备入口防止单点故障。",
+					},
+				},
+				{
+					"@type": "Question",
+					"name": "为什么机场不建议直接买年付？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "翻墙服务处于高动态博弈环境，随时面临线路被拔线、域名被墙或商家运营变动风险。除少数运营4年以上的头部老牌外，强烈建议用户先通过单月付测试晚高峰表现，满意后再考虑季度续费。",
+					},
+				},
+			],
+		},
+	],
+};
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+    <div class="space-y-6">
+        <!-- 面包屑导航 -->
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-black/50 dark:text-white/50 px-1">
+            <a href="/" class="hover:text-(--primary) transition-colors">首页</a>
+            <span>/</span>
+            <span class="text-black/80 dark:text-white/80 font-medium">机场推荐</span>
+        </nav>
+
+        <!-- 栏目头部引导横幅 (Answer-First) -->
+        <div class="card-base p-6 sm:p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-(--primary)/10 text-(--primary)">
+                <span>🚀 实测评测 · 拒绝虚假宣传</span>
+                <span>•</span>
+                <span>更新时间：2026-10-24</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                2026 机场推荐与选购指南：综合横评、性价比盘点与专线精选
+            </h1>
+
+            <div class="text-sm text-black/75 dark:text-white/75 leading-relaxed space-y-3">
+                <p>
+                    <strong>【快速结论 (Answer-First)】</strong>：选择机场的核心是「匹配需求，拒绝为过剩溢价买单」。
+                    若追求<strong>极致稳定办公与 4K 秒开</strong>，首推配备真实 IEPL / IPLC 专线架构与晚高峰低丢包率的服务商；
+                    若追求<strong>经济实用与性价比</strong>，可选用月付在 10-20 元档位、节点拓扑健康的平民良心机场；
+                    若需要查看全部 42 家品牌的具体参数与跑分图，可直接进入品牌对比大厅。
+                </p>
+
+                <!-- 栏目说明三要素 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 text-xs">
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-(--primary) mb-1">📌 栏目定位</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            打破商单滤镜，以真实晚高峰压力测试、协议特征与节点可用率为衡量依据，提供中立的机场评测。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-amber-500 mb-1">📖 覆盖内容</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            综合推荐结论、性价比月付套餐实测、IEPL/IPLC 专线稳定性追踪、AI 与流媒体原生节点解锁。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-emerald-500 mb-1">🎯 适合谁看</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            准备购买或更换机场的跨境网民、看重流媒体画质的影音爱好者及依赖海外 AI 办公的高频用户。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 42+品牌库快速入口横幅 -->
+        <div class="card-base p-6 rounded-2xl border border-black/5 dark:border-white/5 bg-gradient-to-r from-(--primary)/10 via-transparent to-amber-500/10">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">🗂️</span>
+                        <h2 class="text-base sm:text-lg font-bold text-black/90 dark:text-white/90">
+                            想要按月费、专线类型、客户端与跑分精准筛选？
+                        </h2>
+                    </div>
+                    <p class="text-xs text-black/65 dark:text-white/65">
+                        收录 42 家活跃品牌，包含 17 家晚高峰全节点跑分图，支持一键多维交互筛选。
+                    </p>
+                </div>
+                <a
+                    href="/brands/"
+                    class="px-5 py-2.5 rounded-xl text-xs font-bold bg-(--primary) text-white shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shrink-0"
+                >
+                    <span>进入 42+ 家品牌对比大厅</span>
+                    <span>→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 子专题入口 -->
+        <div class="space-y-3">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📑 机场推荐分类专题
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                    href="/posts/airport-recommendations-guide/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🏆</span>
+                        <span>综合推荐与核心选购结论</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        汇总年度表现最优的机场服务商，给出客观量化的评测打分表与场景选购建议。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/cost-effective-airports/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>💰</span>
+                        <span>高性价比平民机场实测盘点</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        月费低至个位数、流量单价实惠的平民机场深度评测，适合日常备用与轻度查资料。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/iplc-iepl-airports/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>⚡</span>
+                        <span>稳定专线机场推荐 (IEPL/IPLC)</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        盘点具备真实物理内网专线的顶级机场，敏感时期不掉线、晚高峰低抖动。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/ai-streaming-airports/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🎬</span>
+                        <span>AI与流媒体解锁精选机场</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        针对 ChatGPT、Claude、Gemini 与 Netflix、Disney+ 4K 原生 IP 解锁能力进行专项评测。
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <!-- 核心评测文章精选 -->
+        <div class="space-y-4 pt-2">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📚 核心横评与深度分析
+            </h2>
+            <div class="grid grid-cols-1 gap-4">
+                {corePosts.map((post) => (
+                    <article class="card-base p-5 sm:p-6 rounded-2xl border border-black/5 dark:border-white/5 hover:shadow-md transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
+                            <h3 class="text-base sm:text-lg font-bold text-black/90 dark:text-white/90 hover:text-(--primary) transition-colors">
+                                <a href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}>
+                                    {post.data.title}
+                                </a>
+                            </h3>
+                            <time class="text-xs text-black/40 dark:text-white/40 shrink-0">
+                                {new Date(post.data.published).toLocaleDateString("zh-CN")}
+                            </time>
+                        </div>
+                        <p class="text-xs sm:text-sm text-black/65 dark:text-white/65 leading-relaxed line-clamp-2 mb-4">
+                            {post.data.description}
+                        </p>
+                        <div class="flex items-center justify-between text-xs pt-2 border-t border-black/5 dark:border-white/5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                {post.data.tags.map((tag: string) => (
+                                    <span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <a
+                                href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}
+                                class="font-semibold text-(--primary) hover:underline flex items-center gap-1"
+                            >
+                                <span>阅读全文</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </div>
+
+        <!-- 单独品牌评测文章快速索引 -->
+        <div class="space-y-3 pt-4">
+            <div class="flex items-center justify-between px-1">
+                <h2 class="text-lg font-bold text-black/90 dark:text-white/90">
+                    🏢 单独品牌独立实测报告 ({brandPosts.length}家)
+                </h2>
+                <a href="/brands/" class="text-xs text-(--primary) hover:underline font-semibold">
+                    查看完整品牌库对比 →
+                </a>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {brandPosts.map((brand) => (
+                    <a
+                        href={`/posts/${brand.id.replace(/\.(md|mdx)$/, "")}/`}
+                        class="p-3 rounded-xl card-base border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all text-xs"
+                    >
+                        <div class="font-bold text-black/85 dark:text-white/85 truncate mb-1">
+                            {brand.data.title.split("：")[0].replace("2026", "").trim()}
+                        </div>
+                        <div class="text-[11px] text-black/45 dark:text-white/45 truncate">
+                            {brand.data.description.slice(0, 24)}...
+                        </div>
+                    </a>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>

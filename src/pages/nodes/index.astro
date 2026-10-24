@@ -1,0 +1,255 @@
+---
+import { getSortedPosts } from "@/utils/content-utils";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const pageTitle = "机场网络线路与节点拓扑解析 - 直连/中转/IPLC专线与住宅IP";
+const pageDescription =
+	"深入科普机场网络线路与节点拓扑：直连与中转架构差异、IPLC/IEPL内网专线真相、机房IP与原生住宅IP区别、节点国家地区与延迟选择指南。";
+
+const allPosts = await getSortedPosts();
+
+const nodeSlugs = [
+	"direct-vs-transit-routes",
+	"iplc-vs-iepl-explained",
+	"datacenter-vs-residential-ip",
+	"airport-node-locations-guide",
+];
+
+const categoryPosts = allPosts.filter((post) => {
+	const slug = post.id.replace(/\.(md|mdx)$/, "");
+	return nodeSlugs.includes(slug) || post.data.category === "网络线路";
+});
+
+// JSON-LD 结构化数据
+const schemaGraph = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "CollectionPage",
+			"@id": "https://vpntizi.cc/nodes/#collection",
+			"name": pageTitle,
+			"description": pageDescription,
+			"url": "https://vpntizi.cc/nodes/",
+			"isPartOf": {
+				"@type": "WebSite",
+				"@id": "https://vpntizi.cc/#website",
+			},
+		},
+		{
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "首页",
+					"item": "https://vpntizi.cc/",
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "网络线路",
+					"item": "https://vpntizi.cc/nodes/",
+				},
+			],
+		},
+		{
+			"@type": "ItemList",
+			"name": "网络线路与节点拓扑核心知识",
+			"description": pageDescription,
+			"numberOfItems": categoryPosts.length,
+			"itemListElement": categoryPosts.map((post, idx) => ({
+				"@type": "ListItem",
+				"position": idx + 1,
+				"item": {
+					"@type": "Article",
+					"headline": post.data.title,
+					"description": post.data.description,
+					"url": `https://vpntizi.cc/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`,
+					"datePublished": post.data.published.toISOString(),
+				},
+			})),
+		},
+		{
+			"@type": "FAQPage",
+			"mainEntity": [
+				{
+					"@type": "Question",
+					"name": "IPLC与IEPL专线到底好在哪里？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "IPLC（国际私有租用线路）与IEPL（国际以太网私有专线）属于跨境点对点内网光缆直连，数据不过公网国际出口防火墙，因此具备超低抖动、极低丢包及敏感时期不受封锁干扰的核心优势。",
+					},
+				},
+				{
+					"@type": "Question",
+					"name": "为什么机场节点不是越多越好？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "虚高节点数量往往是大量廉价VPS或复用同一落地出口的产物。用户日常实际使用的核心节点95%集中在香港、日本、新加坡和美国。看重节点可用率与晚高峰带宽吞吐，远比盲目追求几百个冷门国家节点更实用。",
+					},
+				},
+			],
+		},
+	],
+};
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+    <div class="space-y-6">
+        <!-- 面包屑导航 -->
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-black/50 dark:text-white/50 px-1">
+            <a href="/" class="hover:text-(--primary) transition-colors">首页</a>
+            <span>/</span>
+            <span class="text-black/80 dark:text-white/80 font-medium">网络线路</span>
+        </nav>
+
+        <!-- 栏目头部引导横幅 (Answer-First) -->
+        <div class="card-base p-6 sm:p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-(--primary)/10 text-(--primary)">
+                <span>🌐 网络拓扑 · 专线真相揭秘</span>
+                <span>•</span>
+                <span>更新时间：2026-10-24</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                网络线路与节点架构解析：直连、中转、IPLC 专线与 IP 类型全解
+            </h1>
+
+            <div class="text-sm text-black/75 dark:text-white/75 leading-relaxed space-y-3">
+                <p>
+                    <strong>【快速结论 (Answer-First)】</strong>：机场的速度和稳定性 80% 取决于其<strong>传输线路架构</strong>。
+                    <strong>普通直连</strong>受公网国际出口拥堵影响最大，晚高峰丢包严重；
+                    <strong>公网中转（隧道）</strong>在国内部署入口服务器进行协议中继，大幅改善了丢包；
+                    而<strong>真实 IEPL / IPLC 专线</strong>通过跨境物理专网内网传输，不过公网防火墙，是保障晚高峰 4K 极速与敏感期高可用率的终极方案。
+                </p>
+
+                <!-- 栏目说明三要素 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 text-xs">
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-(--primary) mb-1">📌 栏目定位</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            揭开商家营销宣传中的技术术语迷雾，还原跨境传输链路与出口 IP 的真实底层逻辑。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-amber-500 mb-1">📖 覆盖内容</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            直连与公网中转结构、IPLC/IEPL 内网专线原理、机房 IP 与住宅原生 IP 区别、节点国家选择策略。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-emerald-500 mb-1">🎯 适合谁看</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            遭遇晚高峰频繁断流、经常因 IP 不纯净导致账号被风控、想要深度搞懂专线原理的技术型用户。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子专题入口 -->
+        <div class="space-y-3">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📑 线路与拓扑核心专题
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                    href="/posts/direct-vs-transit-routes/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🔀</span>
+                        <span>直连与中转线路差异解析</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        跨境网络拓扑结构解析：为什么直连线路晚高峰卡顿而优质中转隧道能保持顺畅？
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/iplc-vs-iepl-explained/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>⚡</span>
+                        <span>IPLC与IEPL专线核心原理解析</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        如何识别机场宣传中的“真假专线”？二层链路与三层内网物理隔离技术细节全科普。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/datacenter-vs-residential-ip/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🏠</span>
+                        <span>机房IP与原生住宅IP有什么区别？</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        OpenAI (ChatGPT) 与 Netflix 风控机制深度拆解：为什么广播 IP 容易被拦截或封号？
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/airport-node-locations-guide/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>🗺️</span>
+                        <span>机场节点地区越多越好吗？</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        节点数量、物理延迟与解锁能力的真实关系。常见香港、日本、新加坡及美西节点的实测延迟参考。
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <!-- 栏目文章列表 -->
+        <div class="space-y-4 pt-2">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📚 网络线路文章精选 ({categoryPosts.length})
+            </h2>
+
+            <div class="grid grid-cols-1 gap-4">
+                {categoryPosts.map((post) => (
+                    <article class="card-base p-5 sm:p-6 rounded-2xl border border-black/5 dark:border-white/5 hover:shadow-md transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
+                            <h3 class="text-base sm:text-lg font-bold text-black/90 dark:text-white/90 hover:text-(--primary) transition-colors">
+                                <a href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}>
+                                    {post.data.title}
+                                </a>
+                            </h3>
+                            <time class="text-xs text-black/40 dark:text-white/40 shrink-0">
+                                {new Date(post.data.published).toLocaleDateString("zh-CN")}
+                            </time>
+                        </div>
+                        <p class="text-xs sm:text-sm text-black/65 dark:text-white/65 leading-relaxed line-clamp-2 mb-4">
+                            {post.data.description}
+                        </p>
+                        <div class="flex items-center justify-between text-xs pt-2 border-t border-black/5 dark:border-white/5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                {post.data.tags.map((tag: string) => (
+                                    <span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <a
+                                href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}
+                                class="font-semibold text-(--primary) hover:underline flex items-center gap-1"
+                            >
+                                <span>阅读全文</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>

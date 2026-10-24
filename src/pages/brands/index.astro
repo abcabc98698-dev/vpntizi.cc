@@ -1,0 +1,160 @@
+---
+import BrandFilter from "@/components/brands/BrandFilter.svelte";
+import { airports } from "@/data/airports";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const pageTitle = "机场品牌库大全 (42+家主流服务商实测与多维对比)";
+const pageDescription =
+	"vpntizi.cc 权威收录42家活跃机场品牌。涵盖IEPL/IPLC专线架构、专属客户端、ChatGPT与流媒体解锁能力、月付起步价格及2026晚高峰全节点跑分图。提供客观透明数据与避坑指南。";
+
+// 构建 Schema Graph (GEO / AEO 核心增强)
+const schemaGraph = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "CollectionPage",
+			"@id": "https://vpntizi.cc/brands/#collection",
+			"name": pageTitle,
+			"description": pageDescription,
+			"url": "https://vpntizi.cc/brands/",
+			"isPartOf": {
+				"@type": "WebSite",
+				"@id": "https://vpntizi.cc/#website"
+			}
+		},
+		{
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "首页",
+					"item": "https://vpntizi.cc/"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "机场品牌库",
+					"item": "https://vpntizi.cc/brands/"
+				}
+			]
+		},
+		{
+			"@type": "ItemList",
+			"name": pageTitle,
+			"description": pageDescription,
+			"numberOfItems": airports.length,
+			"itemListElement": airports.map((brand, idx) => ({
+				"@type": "ListItem",
+				"position": idx + 1,
+				"item": {
+					"@type": "Product",
+					"name": brand.name,
+					"description": brand.summary,
+					"url": `https://vpntizi.cc/posts/airport-${brand.slug}/`,
+					"offers": {
+						"@type": "Offer",
+						"price": brand.minPrice.replace(/[^\d.]/g, "") || "0",
+						"priceCurrency": "CNY"
+					}
+				}
+			}))
+		}
+	]
+};
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <!-- JSON-LD 结构化数据注入 -->
+    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+    <div class="space-y-6">
+        <!-- 面包屑导航 -->
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-black/50 dark:text-white/50 px-1">
+            <a href="/" class="hover:text-(--primary) transition-colors">首页</a>
+            <span>/</span>
+            <span class="text-black/80 dark:text-white/80 font-medium">机场品牌库</span>
+        </nav>
+
+        <!-- 页面 Answer-First 引导横幅 -->
+        <div class="card-base p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-(--primary)/10 text-(--primary)">
+                <span>🛡️ 客观实测 · 实体知识库</span>
+                <span>•</span>
+                <span>更新时间：2026-10-24</span>
+            </div>
+            
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                2026 机场品牌库与综合选购数据库
+            </h1>
+
+            <div class="text-sm text-black/70 dark:text-white/70 leading-relaxed space-y-2">
+                <p>
+                    <strong>【快速结论 (Answer-First)】</strong>：选择机场不应单纯追求「节点数量」或「极致低价」。
+                    如果是<strong>零配置新手</strong>，建议优先选择配备专属客户端（如飞猫云、微风网络、梯子云）的服务；
+                    如果是<strong>追求稳定办公与流媒体 4K</strong>，应认准具备真实 IEPL / IPLC 专线架构与内网跨境直连的服务商（如光速云、微风网络、星岛梦、WgetCloud）；
+                    若是<strong>轻度备用</strong>，可选择单月 10 元以内的经济型套餐。
+                </p>
+                <p class="text-xs text-black/50 dark:text-white/50">
+                    * 本品牌库严格遵循客观实测原则，无确凿记录的字段均标记为「待核实」。所列注册链接均包含推广返佣标识（nofollow sponsored），所得佣金将全部用于服务器及长期节点监控运维，绝不影响用户实际付款价格。
+                </p>
+            </div>
+
+            <!-- 核心数据概览标签 -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-black/5 dark:border-white/5 text-center">
+                <div class="bg-black/3 dark:bg-white/3 p-3 rounded-xl">
+                    <div class="text-xl font-black text-(--primary)">42+</div>
+                    <div class="text-xs text-black/50 dark:text-white/50">入库品牌</div>
+                </div>
+                <div class="bg-black/3 dark:bg-white/3 p-3 rounded-xl">
+                    <div class="text-xl font-black text-amber-500">17家</div>
+                    <div class="text-xs text-black/50 dark:text-white/50">晚高峰跑分附图</div>
+                </div>
+                <div class="bg-black/3 dark:bg-white/3 p-3 rounded-xl">
+                    <div class="text-xl font-black text-emerald-500">100%</div>
+                    <div class="text-xs text-black/50 dark:text-white/50">实测链路核验</div>
+                </div>
+                <div class="bg-black/3 dark:bg-white/3 p-3 rounded-xl">
+                    <div class="text-xl font-black text-blue-500">¥5.6起</div>
+                    <div class="text-xs text-black/50 dark:text-white/50">最低月费门槛</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 交互式品牌过滤筛选器 (Svelte 5 岛屿组件) -->
+        <BrandFilter client:load initialAirports={airports} />
+
+        <!-- 选购避坑原则指南 (GEO 知识块补充) -->
+        <div class="card-base p-6 rounded-2xl border border-black/5 dark:border-white/5 space-y-4 text-xs text-black/70 dark:text-white/70 leading-relaxed">
+            <h2 class="text-base font-bold text-black/90 dark:text-white/90">
+                💡 机场选购防坑四项铁律
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <div class="font-bold text-amber-600 dark:text-amber-400">1. 严控长期付费风险</div>
+                    <p>
+                        除极少数运营 4 年以上的头部老牌（如光速云、星岛梦）提供一次性不限时套餐外，任何新兴小品牌<strong>坚决不要一开始就购买年付或多年付</strong>。务必先以月付或季付实测晚高峰（20:00 - 23:00）的真实丢包率与延迟。
+                    </p>
+                </div>
+                <div class="space-y-1">
+                    <div class="font-bold text-blue-600 dark:text-blue-400">2. 理性看待「专线宣传」</div>
+                    <p>
+                        市面常见「假专线」实为普通公网中转混淆。真 IEPL 专线在敏感时期（如特殊会议期间）依然具有 99% 以上的连通率，且 ping 抖动极低（通常低于 3ms）。
+                    </p>
+                </div>
+                <div class="space-y-1">
+                    <div class="font-bold text-emerald-600 dark:text-emerald-400">3. 认清客户端兼容性</div>
+                    <p>
+                        部分机场仅支持自研专属客户端，无法导出通用 Clash / Shadowrocket 订阅链接。这虽然对新手极其省心，但对软路由、Apple TV 等进阶场景不适用。
+                    </p>
+                </div>
+                <div class="space-y-1">
+                    <div class="font-bold text-purple-600 dark:text-purple-400">4. AI 与流媒体的原生 IP 属性</div>
+                    <p>
+                        OpenAI (ChatGPT)、Claude 与 Gemini 对节点 IP 的风控级别不同。部分节点能看 Netflix 但无法登录 ChatGPT，务必参考对应品牌的具体解锁标签。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</MainGridLayout>

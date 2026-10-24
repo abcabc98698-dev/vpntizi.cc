@@ -1,0 +1,254 @@
+---
+import { getSortedPosts } from "@/utils/content-utils";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+const pageTitle = "稳定好用梯子推荐 - 电脑/手机梯子客户端实测与长效选购";
+const pageDescription =
+	"客观评测2026年好用梯子软件。针对 Windows、macOS 电脑端及 iOS、Android 移动端提供稳定可靠的梯子推荐，附长期可用率追踪与选购避坑指南。";
+
+const allPosts = await getSortedPosts();
+
+const tiziSlugs = [
+	"ladder-selection-standards",
+	"mobile-ladder-guide",
+	"long-term-stability-records",
+	"clash-v2rayn-shadowrocket-explained",
+];
+
+const categoryPosts = allPosts.filter((post) => {
+	const slug = post.id.replace(/\.(md|mdx)$/, "");
+	return tiziSlugs.includes(slug) || post.data.category === "梯子推荐";
+});
+
+// JSON-LD 结构化数据
+const schemaGraph = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "CollectionPage",
+			"@id": "https://vpntizi.cc/tizi/#collection",
+			"name": pageTitle,
+			"description": pageDescription,
+			"url": "https://vpntizi.cc/tizi/",
+			"isPartOf": {
+				"@type": "WebSite",
+				"@id": "https://vpntizi.cc/#website",
+			},
+		},
+		{
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "首页",
+					"item": "https://vpntizi.cc/",
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "梯子推荐",
+					"item": "https://vpntizi.cc/tizi/",
+				},
+			],
+		},
+		{
+			"@type": "ItemList",
+			"name": "稳定梯子评测与推荐核心文章",
+			"description": pageDescription,
+			"numberOfItems": categoryPosts.length,
+			"itemListElement": categoryPosts.map((post, idx) => ({
+				"@type": "ListItem",
+				"position": idx + 1,
+				"item": {
+					"@type": "Article",
+					"headline": post.data.title,
+					"description": post.data.description,
+					"url": `https://vpntizi.cc/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`,
+					"datePublished": post.data.published.toISOString(),
+				},
+			})),
+		},
+		{
+			"@type": "FAQPage",
+			"mainEntity": [
+				{
+					"@type": "Question",
+					"name": "评判一个梯子是否好用的核心标准是什么？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "我们建立的六维评测标准包括：晚高峰持续带宽吞吐（不低于100Mbps）、丢包率（低于0.5%）、敏感期抗封锁可用率（高于99%）、多设备客户端体验、退款保障条款及工单响应时效。",
+					},
+				},
+				{
+					"@type": "Question",
+					"name": "手机梯子经常在后台被杀掉怎么办？",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "Android系统需在电池管理中将代理客户端（如Clash Meta for Android）设为无限制后台，并锁定任务卡片；iOS系统推荐使用Shadowrocket或Loon，并开启按需连接（On-Demand）与快捷指令自动化保活。",
+					},
+				},
+			],
+		},
+	],
+};
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription}>
+    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+    <div class="space-y-6">
+        <!-- 面包屑导航 -->
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-black/50 dark:text-white/50 px-1">
+            <a href="/" class="hover:text-(--primary) transition-colors">首页</a>
+            <span>/</span>
+            <span class="text-black/80 dark:text-white/80 font-medium">梯子推荐</span>
+        </nav>
+
+        <!-- 栏目头部引导横幅 (Answer-First) -->
+        <div class="card-base p-6 sm:p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-(--primary)/10 text-(--primary)">
+                <span>🪜 跨端实测 · 长期稳定性追踪</span>
+                <span>•</span>
+                <span>更新时间：2026-10-24</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-black/90 dark:text-white/90">
+                稳定梯子推荐与长效选购：电脑/手机跨平台客户端实测记录
+            </h1>
+
+            <div class="text-sm text-black/75 dark:text-white/75 leading-relaxed space-y-3">
+                <p>
+                    <strong>【快速结论 (Answer-First)】</strong>：挑选好用梯子的终极法则是「重视长期稳定性，远胜短期跑分峰值」。
+                    一个合格的梯子应当具备<strong>晚高峰不卡顿</strong>（丢包率低于 0.5%）、<strong>跨周期抗封锁</strong>（特殊时期具备多重入口灾备）及<strong>多端无缝协同</strong>能力。
+                    电脑端（Windows/Mac）首推 Clash Verge Rev，手机端 iOS 推荐 Shadowrocket，Android 推荐 Clash Meta。
+                </p>
+
+                <!-- 栏目说明三要素 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 text-xs">
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-(--primary) mb-1">📌 栏目定位</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            从普通用户的使用习惯与多终端场景出发，提供跨平台兼容、长期稳定不断连的梯子推荐。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-amber-500 mb-1">📖 覆盖内容</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            好用梯子评价六维标准、Windows/macOS 电脑梯子、iOS/Android 手机移动梯子及真实抗封锁长测记录。
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-black/3 dark:bg-white/3 border border-black/5 dark:border-white/5">
+                        <div class="font-bold text-emerald-500 mb-1">🎯 适合谁看</div>
+                        <p class="text-black/60 dark:text-white/60">
+                            多设备协同办公人群、频繁遭遇断流掉线的普通用户及寻找省心不折腾梯子方案的消费者。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子专题入口 -->
+        <div class="space-y-3">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📑 梯子推荐核心专题
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                    href="/posts/ladder-selection-standards/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>📐</span>
+                        <span>好用梯子综合评价标准</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        速度、可用率、客户端易用性与售后响应：客观量化梯子服务优劣的六大核心评价维度。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/mobile-ladder-guide/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>📱</span>
+                        <span>手机移动端梯子推荐与配置</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        iPhone (小火箭) 与 Android 手机客户端配置教程，解决后台休眠断流与电量过度消耗问题。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/clash-v2rayn-shadowrocket-explained/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>💻</span>
+                        <span>电脑桌面梯子客户端全平台实测</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        Clash、v2rayN 与 Shadowrocket 分别是什么？客户端与梯子订阅服务的关系与配置技巧。
+                    </p>
+                </a>
+
+                <a
+                    href="/posts/long-term-stability-records/"
+                    class="card-base p-5 rounded-xl border border-black/5 dark:border-white/5 hover:border-(--primary)/50 transition-all group"
+                >
+                    <div class="flex items-center gap-2 mb-2 font-bold text-black/90 dark:text-white/90 group-hover:text-(--primary) transition-colors">
+                        <span>📈</span>
+                        <span>稳定梯子长期实测监控记录</span>
+                    </div>
+                    <p class="text-xs text-black/60 dark:text-white/60 leading-relaxed">
+                        跨越多个敏感时期的可用率监测、突发网络中断应急恢复记录与服务商抗风浪能力核验。
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <!-- 栏目文章列表 -->
+        <div class="space-y-4 pt-2">
+            <h2 class="text-lg font-bold text-black/90 dark:text-white/90 px-1">
+                📚 梯子推荐文章精选 ({categoryPosts.length})
+            </h2>
+
+            <div class="grid grid-cols-1 gap-4">
+                {categoryPosts.map((post) => (
+                    <article class="card-base p-5 sm:p-6 rounded-2xl border border-black/5 dark:border-white/5 hover:shadow-md transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
+                            <h3 class="text-base sm:text-lg font-bold text-black/90 dark:text-white/90 hover:text-(--primary) transition-colors">
+                                <a href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}>
+                                    {post.data.title}
+                                </a>
+                            </h3>
+                            <time class="text-xs text-black/40 dark:text-white/40 shrink-0">
+                                {new Date(post.data.published).toLocaleDateString("zh-CN")}
+                            </time>
+                        </div>
+                        <p class="text-xs sm:text-sm text-black/65 dark:text-white/65 leading-relaxed line-clamp-2 mb-4">
+                            {post.data.description}
+                        </p>
+                        <div class="flex items-center justify-between text-xs pt-2 border-t border-black/5 dark:border-white/5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                {post.data.tags.map((tag: string) => (
+                                    <span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <a
+                                href={`/posts/${post.id.replace(/\.(md|mdx)$/, "")}/`}
+                                class="font-semibold text-(--primary) hover:underline flex items-center gap-1"
+                            >
+                                <span>阅读全文</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>
